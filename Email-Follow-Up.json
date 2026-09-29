@@ -1,0 +1,1959 @@
+{
+  "name": "Email-Follow-Up",
+  "nodes": [
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Schedule Trigger').item.json['Readable time'] }}"
+      },
+      "id": "b6b17ba1-8e6a-4f8b-ab72-402ff211a821",
+      "name": "Simple Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [
+        144,
+        224
+      ],
+      "typeVersion": 1.3
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=We came across the incredible work your organization is doing and were truly impressed. Our team at Movya reviewed your public presence, and it’s clear you’ve built something impactful and meaningful.\n\nWe believe there’s a great opportunity to support your mission further by streamlining one or more areas of your work through digital innovation.\n\nAt Movya, we specialize in helping trusts, foundations, and nonprofit organizations grow and operate more efficiently through:\n\n✅ Website & Web-App Development\n✅ Social Media & Digital Marketing\n✅ Custom Software Solutions (e.g., CRM, Donor Management, Volunteer Systems)\n✅ AI-Based Chatbots & Smart Assistants\n✅ Natural Language Processing (NLP) for Donor Support & Query Handling\n✅ Custom AI Agents to automate routine communication and data management\n\nBy leveraging modern, easy-to-manage technologies, we help organizations like yours:\n\nExpand reach and visibility online\nBuild greater trust and engagement\nAchieve faster and more scalable growth\n\nWe’d be honored to explore how we can assist your team in making your efforts more impactful through the right digital tools.\n\nLooking forward to hearing from you!",
+        "options": {
+          "systemMessage": "=Write a email in simple and professional way.add this insted of best regards Warm regards,\nAlso, always sign off the email from \nWarm regards,\nTeam Movya\n📧 sales@movya.com\n📨 info@movya.com\n🌐 www.movya.com\n\nand also modify the content based on given content and replace the Recipient's Name with this {{ $json.Name }} and and write the email body in a way that it will not go to the spam folder of receipient's email and ✅ 3. Avoid Spam Trigger Words in Subject/Body only i want the content not include the subject and dont give space after best regards and use Hi always isnted of Dear"
+        }
+      },
+      "id": "0fe89070-1e19-45f3-a0d3-94e0b7d961aa",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        -16,
+        0
+      ],
+      "typeVersion": 1.8
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "daysInterval": 2,
+              "triggerAtHour": 1,
+              "triggerAtMinute": 20
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1072,
+        832
+      ],
+      "id": "ce577f46-9c54-41b4-bf5d-83b389965a37",
+      "name": "Schedule Trigger",
+      "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1OLFd3OKiXLd45aqx6fIsYTUc7l7i3sPxzKNrQxMY1wc",
+          "mode": "list",
+          "cachedResultName": "Email database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OLFd3OKiXLd45aqx6fIsYTUc7l7i3sPxzKNrQxMY1wc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 172437016,
+          "mode": "list",
+          "cachedResultName": "Sheet2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OLFd3OKiXLd45aqx6fIsYTUc7l7i3sPxzKNrQxMY1wc/edit#gid=172437016"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -688,
+        256
+      ],
+      "id": "322edc49-dc62-4539-aa9e-20ada0d31e64",
+      "name": "Get row(s) in sheet",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "cbyubpMIDrgyitPK",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d19c621e-714f-434e-895c-ea0a233db9b8",
+              "name": "name",
+              "value": "={{ $json.Name }}",
+              "type": "string"
+            },
+            {
+              "id": "d1592df5-8037-4a18-a373-13b8fc58204e",
+              "name": "email",
+              "value": "={{ $json.EmailTo }}",
+              "type": "string"
+            },
+            {
+              "id": "382e25ef-ffe2-4c28-aa99-5e816213bf3f",
+              "name": "date",
+              "value": "={{ new Date().toISOString().split(\"T\")[0] }}",
+              "type": "string"
+            },
+            {
+              "id": "0bd45027-a347-4761-9ff9-e4459e047379",
+              "name": "scheduled_time",
+              "value": "={{ $json.scheduled_time }}",
+              "type": "string"
+            },
+            {
+              "id": "b0a72331-0790-4dd1-9c42-3071baf7c43a",
+              "name": "Sent",
+              "value": "={{ $json.Sent }}",
+              "type": "string"
+            },
+            {
+              "id": "646133c9-7199-478f-861f-def592fc4f59",
+              "name": "Subject",
+              "value": "={{ $json.Subject }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -464,
+        256
+      ],
+      "id": "1f558fbb-912d-4e99-8aec-a81bcefca061",
+      "name": "set user input"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f42454bb-c622-4871-b1c0-9b8bebfcbcd7",
+              "name": "name",
+              "value": "={{ $('set user input').item.json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "9c2e6996-48b1-418b-af5c-1166a47c6359",
+              "name": "emailto",
+              "value": "={{ $('set user input').item.json.EmailTo }}",
+              "type": "string"
+            },
+            {
+              "id": "3976cf5e-a1ac-44a4-9e39-85605d0a0c47",
+              "name": "emailBody",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            },
+            {
+              "id": "93c00468-2324-41a4-b9c9-72ea54ed2001",
+              "name": "subject",
+              "value": "={{ $('set user input').item.json.Subject }}",
+              "type": "string"
+            },
+            {
+              "id": "25f7e5d5-cafc-49be-a312-dac0ed7e6dc7",
+              "name": "emailfrom",
+              "value": "={{ $('set user input').item.json.EmailFrom }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        384,
+        112
+      ],
+      "id": "8d7d521c-b7ad-432a-a0ec-5909fd68676a",
+      "name": "set email"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f6c61c9f-44f8-4301-81aa-392f15287b67",
+              "leftValue": "={{ new Date().toLocaleTimeString(\"en-IN\", {   timeZone: \"Asia/Kolkata\",   hour12: false,   hour: \"2-digit\",   minute: \"2-digit\",   second: \"2-digit\" }) }}",
+              "rightValue": "={{ $json[\"scheduled_time\"] }}",
+              "operator": {
+                "type": "dateTime",
+                "operation": "beforeOrEquals"
+              }
+            },
+            {
+              "id": "b30e769f-0d44-49f1-a388-b7d4ad084479",
+              "leftValue": "={{ $json[\"Sent\"]}}",
+              "rightValue": "Yes ",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -240,
+        256
+      ],
+      "id": "0ba4ffda-9e5d-41e3-95e4-de9e07e0763e",
+      "name": "If",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        16,
+        224
+      ],
+      "id": "7cfa7660-0343-4164-a519-92aeb69b4c3b",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "19gFUMf8gsy6qcmK",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        80,
+        400
+      ],
+      "id": "ae4be0f0-5458-4d78-aefc-30cbfb978f78",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1OLFd3OKiXLd45aqx6fIsYTUc7l7i3sPxzKNrQxMY1wc",
+          "mode": "list",
+          "cachedResultName": "Email database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OLFd3OKiXLd45aqx6fIsYTUc7l7i3sPxzKNrQxMY1wc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 172437016,
+          "mode": "list",
+          "cachedResultName": "Sheet2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OLFd3OKiXLd45aqx6fIsYTUc7l7i3sPxzKNrQxMY1wc/edit#gid=172437016"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "EmailTo": "={{ $('set user input').item.json.EmailTo }}",
+            "emailbody": "={{ $('set email').item.json.emailBody }}",
+            "Sent": "Yes",
+            "Date": "={{ new Date(new Date().toLocaleString(\"en-US\", { timeZone: \"Asia/Kolkata\" })).toLocaleDateString(\"en-GB\").replace(/\\//g, \"/\") }}"
+          },
+          "matchingColumns": [
+            "EmailTo"
+          ],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Subject",
+              "displayName": "Subject",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "EmailFrom",
+              "displayName": "EmailFrom",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "EmailTo",
+              "displayName": "EmailTo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "emailbody",
+              "displayName": "emailbody",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "scheduled_time",
+              "displayName": "scheduled_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Sent",
+              "displayName": "Sent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        1056,
+        112
+      ],
+      "id": "024f6d50-7b91-4b7c-b7f1-90e170f7076a",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "cbyubpMIDrgyitPK",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "sales@movya.com",
+        "toEmail": "={{ $json.emailto }}",
+        "subject": "={{ $json.subject }}",
+        "emailFormat": "text",
+        "text": "={{ $json.emailBody }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        832,
+        304
+      ],
+      "id": "b363afd5-332f-467c-a2d2-972b7f85bf91",
+      "name": "Send email1",
+      "webhookId": "cf9b4598-60d0-4dae-a614-7cbf05c06415",
+      "credentials": {
+        "smtp": {
+          "id": "7ctqFdK4AJ11vfbX",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.emailfrom }}",
+                    "rightValue": "deep@movya.com",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "d2659e4c-ab44-44d8-b149-d49e329b5770"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "f97ee12c-ee2a-4dff-9f6b-b2f5259dc4b6",
+                    "leftValue": "={{ $json.emailfrom }}",
+                    "rightValue": "sales@movya.com",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        608,
+        112
+      ],
+      "id": "f6af473b-e1b6-4707-b7ba-12db35b54830",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Schedule Trigger').item.json['Readable time'] }}"
+      },
+      "id": "23f2240b-d469-4b8f-87dc-ea545a1b35ea",
+      "name": "Simple Memory1",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [
+        144,
+        816
+      ],
+      "typeVersion": 1.3
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=We recently came across your work and were genuinely inspired by the quality and craftsmanship your manufacturing brand represents. It’s clear that your team is building something not just with machines, but with passion and precision.\n\nAt Movya, we specialize in helping modern manufacturing companies like yours unlock new levels of operational efficiency and global visibility through smart, scalable digital solutions.\n\nWe offer tailored support across areas that matter most to high-growth manufacturers:\n\n✅ Custom Websites & Web Portals to showcase products and handle inquiries\n✅ CRM & ERP Integration to streamline client, vendor, and order management\n✅ B2B Marketplace Solutions for lead generation and online sales\n✅ Smart AI Agents & WhatsApp Bots to handle client queries 24/7\n✅ Social Media & Digital Marketing to boost your presence and attract the right partners\n✅ Inventory & Production Tracking Systems to automate and optimize internal operations\n\nOur goal is simple:\nTo empower ambitious manufacturers like you with the right technology to scale faster, work smarter, and lead the market.\n\nIf you're ready to modernize your operations, grow your brand globally, and reduce manual overhead — let's connect and explore how we can support your vision.\n\nLooking forward to collaborating and driving real transformation together.",
+        "options": {
+          "systemMessage": "=Write a email in simple and professional way.add this insted of best regards Warm regards,\nAlso, always sign off the email from \nWarm regards,\nTeam Movya\n📧 sales@movya.com\n📨 info@movya.com\n🌐 www.movya.com\n\nand also modify the content based on given content and replace the Recipient's Name with this {{ $json.Name }} and and write the email body in a way that it will not go to the spam folder of receipient's email and  3. Avoid Spam Trigger Words in Subject/Body only i want the content not include the subject and dont give space after best regards and use Hi always isnted of Dear"
+        }
+      },
+      "id": "9da4f38e-1f63-41b6-a8c1-d0096993dce5",
+      "name": "AI Agent1",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        -16,
+        592
+      ],
+      "typeVersion": 1.8
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1OLFd3OKiXLd45aqx6fIsYTUc7l7i3sPxzKNrQxMY1wc",
+          "mode": "list",
+          "cachedResultName": "Email database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OLFd3OKiXLd45aqx6fIsYTUc7l7i3sPxzKNrQxMY1wc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OLFd3OKiXLd45aqx6fIsYTUc7l7i3sPxzKNrQxMY1wc/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -688,
+        848
+      ],
+      "id": "ac1ebddf-329b-4f59-bceb-7874749d3a2a",
+      "name": "Get row(s) in sheet1",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "cbyubpMIDrgyitPK",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d19c621e-714f-434e-895c-ea0a233db9b8",
+              "name": "name",
+              "value": "={{ $json.Name }}",
+              "type": "string"
+            },
+            {
+              "id": "d1592df5-8037-4a18-a373-13b8fc58204e",
+              "name": "email",
+              "value": "={{ $json.EmailTo }}",
+              "type": "string"
+            },
+            {
+              "id": "382e25ef-ffe2-4c28-aa99-5e816213bf3f",
+              "name": "date",
+              "value": "={{ new Date().toISOString().split(\"T\")[0] }}",
+              "type": "string"
+            },
+            {
+              "id": "0bd45027-a347-4761-9ff9-e4459e047379",
+              "name": "scheduled_time",
+              "value": "={{ $json.scheduled_time }}",
+              "type": "string"
+            },
+            {
+              "id": "b0a72331-0790-4dd1-9c42-3071baf7c43a",
+              "name": "Sent",
+              "value": "={{ $json.Sent }}",
+              "type": "string"
+            },
+            {
+              "id": "646133c9-7199-478f-861f-def592fc4f59",
+              "name": "Subject",
+              "value": "={{ $json.Subject }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -464,
+        848
+      ],
+      "id": "e689dc40-32b7-4b85-abb4-2b557bbaa800",
+      "name": "set user input1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f42454bb-c622-4871-b1c0-9b8bebfcbcd7",
+              "name": "name",
+              "value": "={{ $('set user input1').item.json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "9c2e6996-48b1-418b-af5c-1166a47c6359",
+              "name": "emailto",
+              "value": "={{ $('set user input1').item.json.EmailTo }}",
+              "type": "string"
+            },
+            {
+              "id": "3976cf5e-a1ac-44a4-9e39-85605d0a0c47",
+              "name": "emailBody",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            },
+            {
+              "id": "93c00468-2324-41a4-b9c9-72ea54ed2001",
+              "name": "subject",
+              "value": "={{ $('set user input1').item.json.Subject }}",
+              "type": "string"
+            },
+            {
+              "id": "25f7e5d5-cafc-49be-a312-dac0ed7e6dc7",
+              "name": "emailfrom",
+              "value": "={{ $('set user input1').item.json.EmailFrom }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        384,
+        704
+      ],
+      "id": "a0fb1f38-6f38-488f-8803-e367b586558b",
+      "name": "set email1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f6c61c9f-44f8-4301-81aa-392f15287b67",
+              "leftValue": "={{ new Date().toLocaleTimeString(\"en-IN\", {   timeZone: \"Asia/Kolkata\",   hour12: false,   hour: \"2-digit\",   minute: \"2-digit\",   second: \"2-digit\" }) }}",
+              "rightValue": "={{ $json[\"scheduled_time\"] }}",
+              "operator": {
+                "type": "dateTime",
+                "operation": "beforeOrEquals"
+              }
+            },
+            {
+              "id": "b30e769f-0d44-49f1-a388-b7d4ad084479",
+              "leftValue": "={{ $json[\"Sent\"]}}",
+              "rightValue": "Yes ",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -240,
+        848
+      ],
+      "id": "abc92c8d-cae8-403f-b1bf-4874bb7f3085",
+      "name": "If1",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        16,
+        816
+      ],
+      "id": "783ceffb-11b0-4ea4-a71e-5e39faf9673a",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "19gFUMf8gsy6qcmK",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        80,
+        992
+      ],
+      "id": "b3a72c38-d42a-48f8-a384-a3976cfe603c",
+      "name": "No Operation, do nothing1"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1OLFd3OKiXLd45aqx6fIsYTUc7l7i3sPxzKNrQxMY1wc",
+          "mode": "list",
+          "cachedResultName": "Email database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OLFd3OKiXLd45aqx6fIsYTUc7l7i3sPxzKNrQxMY1wc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OLFd3OKiXLd45aqx6fIsYTUc7l7i3sPxzKNrQxMY1wc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "EmailTo": "={{ $('set user input1').item.json.EmailTo }}",
+            "emailbody": "={{ $('set email1').item.json.emailBody }}",
+            "Sent": "Yes",
+            "Date": "={{ new Date(new Date().toLocaleString(\"en-US\", { timeZone: \"Asia/Kolkata\" })).toLocaleDateString(\"en-GB\").replace(/\\//g, \"/\") }}"
+          },
+          "matchingColumns": [
+            "EmailTo"
+          ],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Subject",
+              "displayName": "Subject",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "EmailFrom",
+              "displayName": "EmailFrom",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "EmailTo",
+              "displayName": "EmailTo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "emailbody",
+              "displayName": "emailbody",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "scheduled_time",
+              "displayName": "scheduled_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Sent",
+              "displayName": "Sent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        832,
+        704
+      ],
+      "id": "4e0a38c2-cf3b-4258-b12b-7e01363a4874",
+      "name": "Update row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "cbyubpMIDrgyitPK",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "sales@movya.com",
+        "toEmail": "={{ $json.emailto }}",
+        "subject": "={{ $json.subject }}",
+        "emailFormat": "text",
+        "text": "={{ $json.emailBody }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        608,
+        704
+      ],
+      "id": "22539b5c-58d0-450c-af83-20499d2e453f",
+      "name": "Send email3",
+      "webhookId": "cf9b4598-60d0-4dae-a614-7cbf05c06415",
+      "credentials": {
+        "smtp": {
+          "id": "7ctqFdK4AJ11vfbX",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Schedule Trigger').item.json['Readable time'] }}"
+      },
+      "id": "d02d8e8e-c1ea-47ee-ac21-1b56b55ad8ca",
+      "name": "Simple Memory2",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [
+        1440,
+        1168
+      ],
+      "typeVersion": 1.3
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=\nI hope this message finds you well.\n\nWe recently came across your organization and were genuinely impressed by the work you’re doing in the finance domain. It's evident that your team is building something of real value — with both strategic foresight and operational excellence.\n\nAt Movya, we specialize in empowering finance-led businesses with digital solutions that enable smarter growth, operational efficiency, and stronger customer engagement.\n\nWe would be delighted to support your journey with solutions such as:\n\n✅ AI-Powered Finance Agents & WhatsApp Bots for 24x7 client support  \n✅ Digital Marketing Strategies tailored for brand visibility and lead generation  \n✅ Scalable SaaS Platforms to streamline onboarding, compliance, and workflows  \n✅ Custom Web Portals for client management, KYC, and reporting  \n✅ Web & Mobile App Development for investor dashboards and fintech products  \n\nWhether your focus is on institutional clients, high-net-worth individuals, or retail investors — our technology is designed to help you scale reliably, reduce manual efforts, and deliver a superior client experience.\n\nIf you’re open to exploring how Movya can add value to your current initiatives, we’d welcome the opportunity for a brief conversation at your convenience.\n\nThank you for your time and consideration. I look forward to the possibility of working together.\n",
+        "options": {
+          "systemMessage": "=Write a email in simple and professional way.add this insted of best regards Warm regards,\nAlso, always sign off the email from \nWarm regards,\nTeam Movya\n📧 sales@movya.com\n📨 info@movya.com\n🌐 www.movya.com\n\nand also modify the content based on given content and replace the Recipient's Name with this {{ $('set user input3').item.json.Name }} and and write the email body in a way that it will not go to the spam folder of receipient's email and ✅ 3. Avoid Spam Trigger Words in Subject/Body only i want the content not include the subject and dont give space after best regards"
+        }
+      },
+      "id": "258daf08-be31-4a4d-8c1e-2771d57eef10",
+      "name": "AI Agent2",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        1280,
+        944
+      ],
+      "typeVersion": 1.8
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1OLFd3OKiXLd45aqx6fIsYTUc7l7i3sPxzKNrQxMY1wc",
+          "mode": "list",
+          "cachedResultName": "Email database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OLFd3OKiXLd45aqx6fIsYTUc7l7i3sPxzKNrQxMY1wc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1610507540,
+          "mode": "list",
+          "cachedResultName": "Sheet4",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OLFd3OKiXLd45aqx6fIsYTUc7l7i3sPxzKNrQxMY1wc/edit#gid=1610507540"
+        },
+        "options": {
+          "returnFirstMatch": false
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -688,
+        1360
+      ],
+      "id": "1dcd5e0c-41e4-4470-a896-73362893b38b",
+      "name": "Get row(s) in sheet2",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "cbyubpMIDrgyitPK",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d19c621e-714f-434e-895c-ea0a233db9b8",
+              "name": "name",
+              "value": "={{ $('set user input3').item.json.Name }}",
+              "type": "string"
+            },
+            {
+              "id": "d1592df5-8037-4a18-a373-13b8fc58204e",
+              "name": "email",
+              "value": "={{ $('set user input3').item.json.EmailTo }}",
+              "type": "string"
+            },
+            {
+              "id": "382e25ef-ffe2-4c28-aa99-5e816213bf3f",
+              "name": "date",
+              "value": "={{ new Date().toISOString().split(\"T\")[0] }}",
+              "type": "string"
+            },
+            {
+              "id": "0bd45027-a347-4761-9ff9-e4459e047379",
+              "name": "scheduled_time",
+              "value": "={{ $('set user input3').item.json.scheduled_time }}",
+              "type": "string"
+            },
+            {
+              "id": "b0a72331-0790-4dd1-9c42-3071baf7c43a",
+              "name": "Sent",
+              "value": "={{ $('set user input3').item.json.Sent }}",
+              "type": "string"
+            },
+            {
+              "id": "646133c9-7199-478f-861f-def592fc4f59",
+              "name": "Subject",
+              "value": "={{ $('set user input3').item.json.Subject }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        832,
+        1184
+      ],
+      "id": "f26d6734-5269-402b-90db-8dcc471540b2",
+      "name": "set user input2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f42454bb-c622-4871-b1c0-9b8bebfcbcd7",
+              "name": "name",
+              "value": "={{ $('set user input2').item.json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "9c2e6996-48b1-418b-af5c-1166a47c6359",
+              "name": "emailto",
+              "value": "={{ $('set user input3').item.json.EmailTo }}",
+              "type": "string"
+            },
+            {
+              "id": "3976cf5e-a1ac-44a4-9e39-85605d0a0c47",
+              "name": "emailBody",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            },
+            {
+              "id": "93c00468-2324-41a4-b9c9-72ea54ed2001",
+              "name": "subject",
+              "value": "={{ $('set user input2').item.json.Subject }}",
+              "type": "string"
+            },
+            {
+              "id": "25f7e5d5-cafc-49be-a312-dac0ed7e6dc7",
+              "name": "emailfrom",
+              "value": "={{ $('set user input3').item.json.EmailFrom }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1680,
+        1040
+      ],
+      "id": "1b149651-1020-42f0-940c-d2bb27790a0d",
+      "name": "set email2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f6c61c9f-44f8-4301-81aa-392f15287b67",
+              "leftValue": "={{ new Date().toLocaleTimeString(\"en-IN\", {   timeZone: \"Asia/Kolkata\",   hour12: false,   hour: \"2-digit\",   minute: \"2-digit\",   second: \"2-digit\" }) }}",
+              "rightValue": "={{ $json[\"scheduled_time\"] }}",
+              "operator": {
+                "type": "dateTime",
+                "operation": "beforeOrEquals"
+              }
+            },
+            {
+              "id": "b30e769f-0d44-49f1-a388-b7d4ad084479",
+              "leftValue": "={{ $json[\"Sent\"]}}",
+              "rightValue": "Yes ",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1056,
+        1184
+      ],
+      "id": "a191be2d-2c1d-469e-a680-81b517b1ce2b",
+      "name": "If2",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1312,
+        1168
+      ],
+      "id": "f55682f4-215d-483c-9013-8653311eb011",
+      "name": "Google Gemini Chat Model2",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "19gFUMf8gsy6qcmK",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1376,
+        1344
+      ],
+      "id": "711c7db9-2851-43cd-aa90-294be5547be2",
+      "name": "No Operation, do nothing2"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1OLFd3OKiXLd45aqx6fIsYTUc7l7i3sPxzKNrQxMY1wc",
+          "mode": "list",
+          "cachedResultName": "Email database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OLFd3OKiXLd45aqx6fIsYTUc7l7i3sPxzKNrQxMY1wc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1610507540,
+          "mode": "list",
+          "cachedResultName": "Sheet4",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OLFd3OKiXLd45aqx6fIsYTUc7l7i3sPxzKNrQxMY1wc/edit#gid=1610507540"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "EmailTo": "={{ $('set email2').item.json.emailto }}",
+            "emailbody": "={{ $('set email2').item.json.emailBody }}",
+            "Sent": "Yes",
+            "Date": "={{ new Date(new Date().toLocaleString(\"en-US\", { timeZone: \"Asia/Kolkata\" })).toLocaleDateString(\"en-GB\").replace(/\\//g, \"/\") }}"
+          },
+          "matchingColumns": [
+            "EmailTo"
+          ],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Subject",
+              "displayName": "Subject",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "EmailFrom",
+              "displayName": "EmailFrom",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "EmailTo",
+              "displayName": "EmailTo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "emailbody",
+              "displayName": "emailbody",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Mobile No",
+              "displayName": "Mobile No",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "scheduled_time",
+              "displayName": "scheduled_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Sent",
+              "displayName": "Sent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        2352,
+        1360
+      ],
+      "id": "84253ead-ab8b-44ab-b1af-9aa0f65c5524",
+      "name": "Update row in sheet2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "cbyubpMIDrgyitPK",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "sales@movya.com",
+        "toEmail": "={{ $json.emailto }}",
+        "subject": "={{ $json.subject }}",
+        "emailFormat": "text",
+        "text": "={{ $json.emailBody }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        2128,
+        1040
+      ],
+      "id": "7aee7f6f-5a45-4e0d-aa3d-90290e0267bf",
+      "name": "Send email",
+      "webhookId": "cf9b4598-60d0-4dae-a614-7cbf05c06415",
+      "credentials": {
+        "smtp": {
+          "id": "7ctqFdK4AJ11vfbX",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -464,
+        1360
+      ],
+      "id": "96337c7a-df16-495e-bbc5-a273a0786802",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        1088
+      ],
+      "id": "c53eb0dc-175e-475d-a51f-eaad1a93d5ac",
+      "name": "No Operation, do nothing3"
+    },
+    {
+      "parameters": {
+        "amount": 7
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1904,
+        1040
+      ],
+      "id": "481c4108-b8f0-42e4-b93d-c7c7140b95c9",
+      "name": "Wait",
+      "webhookId": "d7b963c2-828a-4b02-aa2f-50e2f47b51f7"
+    },
+    {
+      "parameters": {
+        "url": "=https://app.emailverify.io/api/v1/validate?key=T05a5b6Uc5Bp1jedNVp07AHMs5PGrUK1&email={{ $json.EmailTo }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        384,
+        1280
+      ],
+      "id": "6b021ad4-c6f0-436b-bcab-92b976c09035",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "19de6870-731e-4abd-9ac6-dc477808f373",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "valid",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        608,
+        1280
+      ],
+      "id": "46fb7221-0fb1-41f8-ae96-ca3e315079df",
+      "name": "If3"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1056,
+        1440
+      ],
+      "id": "0356550e-87de-4fa2-9776-7b871007e855",
+      "name": "Wait1",
+      "webhookId": "d02a586d-266e-481f-936b-0abe5a4c23f4"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        80,
+        1280
+      ],
+      "id": "2a3a4ea3-703f-49b8-b17c-48fea85ba3af",
+      "name": "Wait2",
+      "webhookId": "8447144a-ff7a-4065-9681-abccef4d2291"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d19c621e-714f-434e-895c-ea0a233db9b8",
+              "name": "name",
+              "value": "={{ $json.Name }}",
+              "type": "string"
+            },
+            {
+              "id": "d1592df5-8037-4a18-a373-13b8fc58204e",
+              "name": "email",
+              "value": "={{ $json.EmailTo }}",
+              "type": "string"
+            },
+            {
+              "id": "382e25ef-ffe2-4c28-aa99-5e816213bf3f",
+              "name": "date",
+              "value": "={{ new Date().toISOString().split(\"T\")[0] }}",
+              "type": "string"
+            },
+            {
+              "id": "0bd45027-a347-4761-9ff9-e4459e047379",
+              "name": "scheduled_time",
+              "value": "={{ $json.scheduled_time }}",
+              "type": "string"
+            },
+            {
+              "id": "b0a72331-0790-4dd1-9c42-3071baf7c43a",
+              "name": "Sent",
+              "value": "={{ $json.Sent }}",
+              "type": "string"
+            },
+            {
+              "id": "646133c9-7199-478f-861f-def592fc4f59",
+              "name": "Subject",
+              "value": "={{ $json.Subject }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -240,
+        1280
+      ],
+      "id": "5f0cdf1e-8ab9-462f-b187-b0284d4a4cba",
+      "name": "set user input3"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "documentId": {
+          "__rl": true,
+          "value": "1OLFd3OKiXLd45aqx6fIsYTUc7l7i3sPxzKNrQxMY1wc",
+          "mode": "list",
+          "cachedResultName": "Email database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OLFd3OKiXLd45aqx6fIsYTUc7l7i3sPxzKNrQxMY1wc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1610507540,
+          "mode": "list",
+          "cachedResultName": "Sheet4",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OLFd3OKiXLd45aqx6fIsYTUc7l7i3sPxzKNrQxMY1wc/edit#gid=1610507540"
+        },
+        "startIndex": "={{ $('set user input3').item.json.row_number }}"
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        832,
+        1440
+      ],
+      "id": "1ecd16a6-69f4-4e21-98d6-f1cb12191080",
+      "name": "Delete rows or columns from sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "cbyubpMIDrgyitPK",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "set email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get row(s) in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "set user input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set user input": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set email": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send email1": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send email1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "set email1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet1": {
+      "main": [
+        [
+          {
+            "node": "set user input1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set user input1": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set email1": {
+      "main": [
+        [
+          {
+            "node": "Send email3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send email3": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory2": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent2": {
+      "main": [
+        [
+          {
+            "node": "set email2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet2": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set user input2": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set email2": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send email": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "set user input3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet2": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Send email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "If3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If3": {
+      "main": [
+        [
+          {
+            "node": "set user input2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Delete rows or columns from sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set user input3": {
+      "main": [
+        [
+          {
+            "node": "Wait2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete rows or columns from sheet": {
+      "main": [
+        [
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "82ddedeb-f570-4611-b147-8e8bd65e06dc",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "cf11e294856b6f7e05a87f97bbca1ad58927e27725ec88d827bf8a1bb55c4607"
+  },
+  "id": "4aOQMWygk82JapRB",
+  "tags": []
+}
